@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Scans a log file and provides block level iterator on the log file Loads the entire block contents in memory Can emit
@@ -152,7 +153,8 @@ class HoodieLogFileReader implements HoodieLogFormat.Reader {
     if (nextBlockVersion.getVersion() != HoodieLogFormatVersion.DEFAULT_VERSION) {
       type = inputStream.readInt();
 
-      Preconditions.checkArgument(type < HoodieLogBlockType.values().length, "Invalid block byte type found " + type);
+      Preconditions.checkArgument(type < HoodieLogBlockType.values().length && type >= 0,
+              "Invalid block byte type found " + type);
       blockType = HoodieLogBlockType.values()[type];
     }
 
@@ -189,6 +191,7 @@ class HoodieLogFileReader implements HoodieLogFormat.Reader {
     // 9. Read the log block end position in the log file
     long blockEndPos = inputStream.getPos();
 
+    Objects.requireNonNull(blockType, "Block type must not be null!");
     switch (blockType) {
       // based on type read the block
       case AVRO_DATA_BLOCK:
