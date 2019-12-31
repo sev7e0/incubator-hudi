@@ -103,11 +103,10 @@ public class HoodieRecord<T extends HoodieRecordPayload> implements Serializable
   /**
    * Sets the current currentLocation of the record. This should happen exactly-once
    */
-  public HoodieRecord setCurrentLocation(HoodieRecordLocation location) {
+  public void setCurrentLocation(HoodieRecordLocation location) {
     checkState();
     assert currentLocation == null;
     this.currentLocation = location;
-    return this;
   }
 
   public HoodieRecordLocation getCurrentLocation() {
@@ -117,11 +116,10 @@ public class HoodieRecord<T extends HoodieRecordPayload> implements Serializable
   /**
    * Sets the new currentLocation of the record, after being written. This again should happen exactly-once.
    */
-  public HoodieRecord setNewLocation(HoodieRecordLocation location) {
+  public void setNewLocation(HoodieRecordLocation location) {
     checkState();
     assert newLocation == null;
     this.newLocation = location;
-    return this;
   }
 
   public Option<HoodieRecordLocation> getNewLocation() {

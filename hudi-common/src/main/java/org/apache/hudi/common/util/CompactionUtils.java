@@ -157,9 +157,8 @@ public class CompactionUtils {
 
     Map<HoodieFileGroupId, Pair<String, HoodieCompactionOperation>> fgIdToPendingCompactionWithInstantMap =
         new HashMap<>();
-    pendingCompactionPlanWithInstants.stream().flatMap(instantPlanPair -> {
-      return getPendingCompactionOperations(instantPlanPair.getKey(), instantPlanPair.getValue());
-    }).forEach(pair -> {
+    pendingCompactionPlanWithInstants.stream().flatMap(instantPlanPair ->
+            getPendingCompactionOperations(instantPlanPair.getKey(), instantPlanPair.getValue())).forEach(pair -> {
       // Defensive check to ensure a single-fileId does not have more than one pending compaction with different
       // file slices. If we find a full duplicate we assume it is caused by eventual nature of the move operation
       // on some DFSs.
@@ -183,10 +182,8 @@ public class CompactionUtils {
       HoodieInstant instant, HoodieCompactionPlan compactionPlan) {
     List<HoodieCompactionOperation> ops = compactionPlan.getOperations();
     if (null != ops) {
-      return ops.stream().map(op -> {
-        return Pair.of(new HoodieFileGroupId(op.getPartitionPath(), op.getFileId()),
-            Pair.of(instant.getTimestamp(), op));
-      });
+      return ops.stream().map(op -> Pair.of(new HoodieFileGroupId(op.getPartitionPath(), op.getFileId()),
+          Pair.of(instant.getTimestamp(), op)));
     } else {
       return Stream.empty();
     }
